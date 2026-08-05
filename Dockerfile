@@ -1,5 +1,8 @@
 FROM n8nio/runners:2.10.2
 USER root
-RUN cd /opt/runners/task-runner-javascript && pnpm add pdf-lib
+RUN PNPM_VER=$(sed -n 's/.*"packageManager": "pnpm@\([^"]*\)".*/\1/p' /opt/runners/task-runner-javascript/node_modules/.modules.yaml) && \
+    corepack prepare pnpm@${PNPM_VER} --activate && \
+    cd /opt/runners/task-runner-javascript && \
+    pnpm add pdf-lib
 COPY n8n-task-runners.json /etc/n8n-task-runners.json
 USER runner
